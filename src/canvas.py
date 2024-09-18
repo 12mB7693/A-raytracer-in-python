@@ -1,7 +1,8 @@
 from .tuples import Color
 
+
 class Canvas:
-    def __init__(self, width: int, height: int, color = Color(0,0,0)) -> None:
+    def __init__(self, width: int, height: int, color=Color(0, 0, 0)) -> None:
         self.width = width
         self.height = height
         self.maximum_color_value = 255
@@ -24,11 +25,9 @@ class Canvas:
     def convert_to_ppm(self) -> str:
         ppm = f"P3\n{self.width} {self.height}\n{self.maximum_color_value}"
 
-        
-
         for row in range(self.height):
             ppm += "\n"
-            
+
             for column in range(self.width):
                 pixel = self.pixel_at(column, row)
                 ppm = (
@@ -41,7 +40,7 @@ class Canvas:
         # for line in ppm.splitlines():
         #     if len(line) > 70:
         #         splitted = line.split()
-                
+
         #         index = 0
         #         while index < len(splitted):
         #             current_line = ""
