@@ -1,6 +1,8 @@
 from __future__ import annotations
 import math
 
+ABS_TOL = 1e-5
+
 
 class Tuple:
     def __init__(self, x, y, z, w) -> None:
@@ -16,10 +18,10 @@ class Tuple:
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Tuple):
             return (
-                math.isclose(self.x, value.x, abs_tol=1e-9)
-                and math.isclose(self.y, value.y, abs_tol=1e-9)
-                and math.isclose(self.z, value.z, abs_tol=1e-9)
-                and math.isclose(self.w, value.w, abs_tol=1e-9)
+                math.isclose(self.x, value.x, abs_tol=ABS_TOL)
+                and math.isclose(self.y, value.y, abs_tol=ABS_TOL)
+                and math.isclose(self.z, value.z, abs_tol=ABS_TOL)
+                and math.isclose(self.w, value.w, abs_tol=ABS_TOL)
             )
         else:
             return False
@@ -65,6 +67,13 @@ class Tuple:
             self.x * other.y - self.y * other.x,
         )
 
+    def reflect(self, normal: Vector) -> Vector:
+        return self - normal * 2 * self.dot(normal)
+
+    #def __repr__(self):
+    #    return f"Tuple({self.x}, {self.y}, {self.z}, {self.w})"
+
+
 
 class Color:
     def __init__(self, red, green, blue):
@@ -75,9 +84,9 @@ class Color:
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Color):
             return (
-                math.isclose(self.red, value.red)
-                and math.isclose(self.green, value.green)
-                and math.isclose(self.blue, value.blue)
+                math.isclose(self.red, value.red, abs_tol=ABS_TOL)
+                and math.isclose(self.green, value.green, abs_tol=ABS_TOL)
+                and math.isclose(self.blue, value.blue, abs_tol=ABS_TOL)
             )
         else:
             return False
@@ -92,15 +101,25 @@ class Color:
             self.red - other.red, self.green - other.green, self.blue - other.blue
         )
 
-    def __mul__(self, scalar):
-        return Color(self.red * scalar, self.green * scalar, self.blue * scalar)
+    def __mul__(self, value):
+        if isinstance(value, int) or isinstance(value, float):
+            return Color(self.red * value, self.green * value, self.blue * value)
+        elif isinstance(value, Color):
+            raise Exception("The value is not a scalar, but a color. Did you mean to use hadamard_product?")
+            #return Color(self.red * value.red, self.green * value.green, self.blue * value.blue)
+        else:
+            raise Exception
 
     __rmul__ = __mul__
 
-    def hadamard_product(self, other):
+    def hadamard_product(self, other: Color):
         return Color(
             self.red * other.red, self.green * other.green, self.blue * other.blue
         )
+
+    def __repr__(self):
+        return f"Color({self.red}, {self.green}, {self.blue})"
+
 
 
 class Vector(Tuple):

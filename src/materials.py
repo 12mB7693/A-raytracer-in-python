@@ -34,7 +34,7 @@ class Material:
         return f"Material({self.color}, {self.ambient}, {self.diffuse}, {self.specular, {self.shininess}})"
 
 def lighting(m: Material, light: PointLight, position: Point, eyev: Vector, normalv: Vector) -> Color:
-    effective_color = m.color * light.intensity
+    effective_color = m.color.hadamard_product(light.intensity)
     lightv = (light.position - position).normalize()
     ambient = effective_color * m.ambient
     light_dot_normal = lightv.dot(normalv)
