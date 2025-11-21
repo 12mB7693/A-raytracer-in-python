@@ -81,3 +81,12 @@ def test_intersection_occurs_on_the_inside():
     assert comps.eyev == Vector(0, 0, -1)
     assert comps.inside == True
     assert comps.normalv == Vector(0, 0, -1)
+
+def test_hit_should_offset_the_point():
+    r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
+    s = Sphere()
+    s.set_transform(translation(0, 0, 1))
+    i = Intersection(5, s)
+    comps = prepare_computations(i, r)
+    assert comps.over_point.z < -ABS_TOL/2
+    assert comps.point.z > comps.over_point.z

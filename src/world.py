@@ -30,7 +30,8 @@ class World:
         return intersections
 
     def shade_hit(self, comps: IntersectionInfo) -> Color:
-        return lighting(comps.shape.material, self.lightSource, comps.point, comps.eyev, comps.normalv)
+        is_shadowed = self.is_shadowed(comps.over_point)
+        return lighting(comps.shape.material, self.lightSource, comps.point, comps.eyev, comps.normalv, is_shadowed)
 
     def color_at(self, r: Ray) -> Color:
         intersections = self.intersect(r)
@@ -40,3 +41,12 @@ class World:
         else:
             comps = prepare_computations(intersection, r)
             return self.shade_hit(comps)
+
+    def is_shadowed(self, p: Point) -> bool:
+        v = self.lightSource.position - p
+        distance = v.magnitude()
+        direction = v.normalize()
+        r = Ray(p, direction)
+        intersections = self.intersect(r)
+        h = hit(intersections)
+        return h is not None and h.t < distance

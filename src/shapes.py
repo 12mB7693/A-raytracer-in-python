@@ -1,5 +1,5 @@
 from .ray import Ray
-from .tuples import Point, Vector
+from .tuples import Point, Vector, ABS_TOL
 from .matrix import create_identity_matrix, Matrix
 from .materials import Material
 import math
@@ -21,6 +21,7 @@ class IntersectionInfo(Intersection):
         self.eyev = None
         self.normalv = None
         self.inside = False
+        self.over_point = None
 
 def prepare_computations(intersection: Intersection, ray: Ray) -> IntersectionInfo:
     comps = IntersectionInfo(intersection)
@@ -30,6 +31,7 @@ def prepare_computations(intersection: Intersection, ray: Ray) -> IntersectionIn
     if comps.normalv.dot(comps.eyev) < 0:
         comps.inside = True
         comps.normalv = -comps.normalv
+    comps.over_point = comps.point + comps.normalv * ABS_TOL
     return comps
 
 

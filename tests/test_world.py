@@ -66,3 +66,37 @@ def test_color_when_intersection_behind_ray():
     r = Ray(Point(0, 0, 0.75), Vector(0, 0 ,-1))
     c = w.color_at(r)
     assert c == inner.material.color
+
+def test_no_shadow_when_point_and_light_not_collinear():
+    w = World.default()
+    p = Point(0, 10, 0)
+    assert w.is_shadowed(p) == False
+
+def test_shadow_if_object_between_point_and_light():
+    w = World.default()
+    p = Point(10, -10, 10)
+    assert w.is_shadowed(p)
+
+def test_no_shadow_when_object_behind_the_light():
+    w = World.default()
+    p = Point(-20, 20, -20)
+    assert w.is_shadowed(p) == False
+
+def test_no_shadow_when_object_behind_the_point():
+    w = World.default()
+    p = Point(-2, 2, -2)
+    assert w.is_shadowed(p) == False
+
+def test_shade_hit_is_given_intersection_in_shadow():
+    w = World()
+    w.lightSource = PointLight(Point(0, 0, -10), Color(1, 1, 1))
+    s1 = Sphere()
+    w.objects.append(s1)
+    s2 = Sphere()
+    s2.set_transform(translation(0, 0, 10))
+    w.objects.append(s2)
+    r = Ray(Point(0, 0, 5), Vector(0, 0, 1))
+    i = Intersection(4, s2)
+    comps = prepare_computations(i, r)
+    c = w.shade_hit(comps)
+    assert c == Color(0.1, 0.1, 0.1)

@@ -33,12 +33,15 @@ class Material:
     def __repr__(self):
         return f"Material({self.color}, {self.ambient}, {self.diffuse}, {self.specular, {self.shininess}})"
 
-def lighting(m: Material, light: PointLight, position: Point, eyev: Vector, normalv: Vector) -> Color:
+def lighting(m: Material, light: PointLight, position: Point, eyev: Vector, normalv: Vector, in_shadow: bool = False) -> Color:
     effective_color = m.color.hadamard_product(light.intensity)
     lightv = (light.position - position).normalize()
     ambient = effective_color * m.ambient
-    light_dot_normal = lightv.dot(normalv)
 
+    if in_shadow:
+        return ambient
+
+    light_dot_normal = lightv.dot(normalv)
     if light_dot_normal < 0:
         diffuse = Color(0, 0, 0)
         specular = Color(0, 0, 0)
