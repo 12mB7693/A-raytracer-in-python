@@ -156,7 +156,7 @@ class Matrix:
             for col in range(self.dimension):
                 c = self.cofactor(row, col)
                 inverse.set_value_at(col, row, c / self.determinant())
-        #print(inverse.values)
+        # print(inverse.values)
         return inverse
 
 

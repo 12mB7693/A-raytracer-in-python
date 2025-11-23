@@ -70,16 +70,26 @@ class Tuple:
     def reflect(self, normal: Vector) -> Vector:
         return self - normal * 2 * self.dot(normal)
 
-    #def __repr__(self):
+    # def __repr__(self):
     #    return f"Tuple({self.x}, {self.y}, {self.z}, {self.w})"
 
 
-
 class Color:
-    def __init__(self, red, green, blue):
+    def __init__(self, red: float, green: float, blue: float):
         self.red = red
         self.green = green
         self.blue = blue
+
+    # __slots__ = ()
+    # WHITE = Color(1, 1, 1)
+
+    # @property
+    # def white(self):
+    #    return Color(1, 1, 1)
+
+    # @property
+    # def black(self):
+    #    return Color(0, 0, 0)
 
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Color):
@@ -105,8 +115,10 @@ class Color:
         if isinstance(value, int) or isinstance(value, float):
             return Color(self.red * value, self.green * value, self.blue * value)
         elif isinstance(value, Color):
-            raise Exception("The value is not a scalar, but a color. Did you mean to use hadamard_product?")
-            #return Color(self.red * value.red, self.green * value.green, self.blue * value.blue)
+            raise Exception(
+                "The value is not a scalar, but a color. Did you mean to use hadamard_product?"
+            )
+            # return Color(self.red * value.red, self.green * value.green, self.blue * value.blue)
         else:
             raise Exception
 
@@ -120,6 +132,13 @@ class Color:
     def __repr__(self):
         return f"Color({self.red}, {self.green}, {self.blue})"
 
+
+class Colors:
+    white = Color(1, 1, 1)
+    black = Color(0, 0, 0)
+    red = Color(1, 0, 0)
+    green = Color(0, 1, 0)
+    blue = Color(0, 0, 1)
 
 
 class Vector(Tuple):

@@ -2,22 +2,46 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from .lights import PointLight
 
-from .tuples import Color, Vector, Point
+from .tuples import Color, Vector, Point, Colors
+from .matrix import create_identity_matrix
+from . import shapes
 
 
 import math
 
+
+class StripePattern:
+    def __init__(self, c1: Color, c2: Color):
+        self.c1 = c1
+        self.c2 = c2
+        self.transform = create_identity_matrix()
+
+    def stripe_at(self, point: Point) -> Color:
+        if math.floor(point.x) % 2 == 0:
+            return self.c1
+        else:
+            return self.c2
+
+    def stripe_at_object(self, object: shapes.Shape, world_point: Point) -> Color:
+        object_point = object.transform.inverse().multiply(world_point)
+        pattern_space = self.transform.inverse().multiply(object_point)
+        return self.stripe_at(pattern_space)
+
+
+
+
 @dataclass
 class Material:
-    color: Color = field(default_factory=lambda: Color(1, 1, 1))
+    color: Color = field(default_factory=lambda: Color(1, 1, 1)) #oder pattern # nur bei bedarf erstellen??
     ambient: float = 0.1
     diffuse: float = 0.9
     specular: float = 0.9
     shininess: float = 200.0
-
+    pattern: StripePattern = None
     def __eq__(self, other):
         if isinstance(other, Material):
             return (
@@ -33,8 +57,21 @@ class Material:
     def __repr__(self):
         return f"Material({self.color}, {self.ambient}, {self.diffuse}, {self.specular, {self.shininess}})"
 
-def lighting(m: Material, light: PointLight, position: Point, eyev: Vector, normalv: Vector, in_shadow: bool = False) -> Color:
-    effective_color = m.color.hadamard_product(light.intensity)
+
+def lighting(
+    m: Material,
+    light: PointLight,
+    position: Point,
+    eyev: Vector,
+    normalv: Vector,
+    in_shadow: bool = False,
+) -> Color:
+    if m.pattern is None:
+        color = m.color
+    else:
+        color = m.pattern.stripe_at(position)
+
+    effective_color = color.hadamard_product(light.intensity)
     lightv = (light.position - position).normalize()
     ambient = effective_color * m.ambient
 

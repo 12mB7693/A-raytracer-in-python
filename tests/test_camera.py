@@ -1,4 +1,4 @@
-from src import *
+from src.raytracer import *
 
 def test_camera_constructor():
     hsize = 160

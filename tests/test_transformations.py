@@ -1,6 +1,6 @@
 import math
 
-from src import (Point, Vector, Matrix, rotation_x, rotation_y, rotation_z, scaling,
+from src.raytracer import (Point, Vector, Matrix, rotation_x, rotation_y, rotation_z, scaling,
                  shearing, translation, view_transform, create_identity_matrix)
 
 

@@ -1,9 +1,9 @@
-from src import Ray
-from src import Point, Vector
-from src import Sphere
-from src import Intersection
-from src import hit
-from src import translation, scaling, create_identity_matrix
+from src.raytracer import Ray
+from src.raytracer import Point, Vector
+from src.raytracer import Sphere
+from src.raytracer import Intersection
+from src.raytracer import hit
+from src.raytracer import translation, scaling, create_identity_matrix
 
 
 def test_ray_attributes():

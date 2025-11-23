@@ -1,4 +1,4 @@
-from src import Tuple, Vector, Point, Color, create_tuple
+from raytracer import Tuple, Vector, Point, Color, create_tuple
 import math
 
 

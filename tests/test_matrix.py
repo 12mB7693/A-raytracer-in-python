@@ -1,5 +1,5 @@
-from src import Matrix, create_identity_matrix
-from src import Tuple
+from src.raytracer import Matrix, create_identity_matrix
+from src.raytracer import Tuple
 
 
 def test_matrix():

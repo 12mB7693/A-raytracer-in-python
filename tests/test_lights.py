@@ -1,5 +1,5 @@
-from src import PointLight, Material
-from src import Color, Point
+from src.raytracer import PointLight, Material
+from src.raytracer import Color, Point
 
 
 def test_point_light_constructor():

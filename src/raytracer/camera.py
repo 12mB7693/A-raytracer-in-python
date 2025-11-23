@@ -5,8 +5,8 @@ from .tuples import Point
 from .canvas import Canvas
 from .world import World
 
-class Camera:
 
+class Camera:
     def __init__(self, hsize: int, vsize: int, fov: float):
         self.hsize = hsize
         self.vsize = vsize
@@ -14,15 +14,15 @@ class Camera:
         self.transform = create_identity_matrix()
         self.compute_pixel_size()
 
-    def compute_pixel_size(self) -> float:
-        half_view = math.tan(self.fov/2)
+    def compute_pixel_size(self) -> None:
+        half_view = math.tan(self.fov / 2)
         aspect = self.hsize / self.vsize
 
         if aspect >= 1:
             self.half_width = half_view
-            self.half_height = half_view/aspect
+            self.half_height = half_view / aspect
         else:
-            self.half_width = half_view*aspect
+            self.half_width = half_view * aspect
             self.half_height = half_view
 
         self.pixel_size = self.half_width * 2 / self.hsize

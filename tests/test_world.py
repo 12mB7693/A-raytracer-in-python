@@ -1,4 +1,4 @@
-from src import *
+from raytracer import *
 
 def test_empty_world():
     w = World()

@@ -1,5 +1,5 @@
-from src import Canvas
-from src import Color
+from src.raytracer import Canvas
+from src.raytracer import Color
 
 
 def test_canvas_dimensions():
