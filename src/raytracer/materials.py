@@ -28,15 +28,15 @@ class StripePattern:
 
     def stripe_at_object(self, object: shapes.Shape, world_point: Point) -> Color:
         object_point = object.transform.inverse().multiply(world_point)
-        pattern_space = self.transform.inverse().multiply(object_point)
-        return self.stripe_at(pattern_space)
+        pattern_point = self.transform.inverse().multiply(object_point)
+        return self.stripe_at(pattern_point)
 
 
 
 
 @dataclass
 class Material:
-    color: Color = field(default_factory=lambda: Color(1, 1, 1)) #oder pattern # nur bei bedarf erstellen??
+    color: Color = field(default_factory=lambda: Color(1, 1, 1)) #TODO: ensure that either pattern or color is None
     ambient: float = 0.1
     diffuse: float = 0.9
     specular: float = 0.9
@@ -59,33 +59,33 @@ class Material:
 
 
 def lighting(
-    m: Material,
     light: PointLight,
-    position: Point,
-    eyev: Vector,
-    normalv: Vector,
+    intersectionInfo: shapes.IntersectionInfo,
     in_shadow: bool = False,
 ) -> Color:
+    shape = intersectionInfo.intersection.shape
+    m = shape.material
+
     if m.pattern is None:
         color = m.color
     else:
-        color = m.pattern.stripe_at(position)
+        color = m.pattern.stripe_at_object(shape, intersectionInfo.point)
 
     effective_color = color.hadamard_product(light.intensity)
-    lightv = (light.position - position).normalize()
+    lightv = (light.position - intersectionInfo.point).normalize()
     ambient = effective_color * m.ambient
 
     if in_shadow:
         return ambient
 
-    light_dot_normal = lightv.dot(normalv)
+    light_dot_normal = lightv.dot(intersectionInfo.normalv)
     if light_dot_normal < 0:
         diffuse = Color(0, 0, 0)
         specular = Color(0, 0, 0)
     else:
         diffuse = effective_color * m.diffuse * light_dot_normal
-        reflectv = -lightv.reflect(normalv)
-        reflect_dot_eye = reflectv.dot(eyev)
+        reflectv = -lightv.reflect(intersectionInfo.normalv)
+        reflect_dot_eye = reflectv.dot(intersectionInfo.eyev)
 
         if reflect_dot_eye <= 0:
             specular = Color(0, 0, 0)

@@ -33,11 +33,8 @@ class World:
     def shade_hit(self, comps: IntersectionInfo) -> Color:
         is_shadowed = self.is_shadowed(comps.over_point)
         return lighting(
-            comps.shape.material,
             self.lightSource,
-            comps.point,
-            comps.eyev,
-            comps.normalv,
+            comps,
             is_shadowed,
         )
 

@@ -58,12 +58,12 @@ def test_computation_preparation():
     r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
     shape = Sphere()
     i = Intersection(4, shape)
-    comps = prepare_computations(i, r)
-    assert comps.t == i.t
-    assert comps.shape == i.shape
-    assert comps.point == Point(0, 0, -1)
-    assert comps.eyev == Vector(0, 0, -1)
-    assert comps.normalv == Vector(0, 0, -1)
+    info = prepare_computations(i, r)
+    assert info.intersection.t == i.t
+    assert info.intersection.shape == i.shape
+    assert info.point == Point(0, 0, -1)
+    assert info.eyev == Vector(0, 0, -1)
+    assert info.normalv == Vector(0, 0, -1)
 
 def test_intersection_occurs_on_the_outside():
     r = Ray(Point(0, 0, -5), Vector(0, 0, 1))

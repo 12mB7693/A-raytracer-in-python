@@ -1,6 +1,6 @@
 from src.raytracer import Material, Color, Colors, StripePattern
 from src.raytracer import Point, Vector, PointLight, lighting
-from src.raytracer import Sphere, scaling, translation
+from src.raytracer import Sphere, Intersection, IntersectionInfo, scaling, translation
 
 import math
 
@@ -13,59 +13,59 @@ def test_material_constructor():
     assert m.shininess == 200.0
 
 def test_lighting_eye_btw_light_and_surface():
-    m = Material()
     pos = Point(0, 0, 0)
     eyev = Vector(0, 0, -1)
     normalv = Vector(0, 0, -1)
     light = PointLight(Point(0, 0, -10), Color(1, 1, 1))
-    result = lighting(m, light, pos, eyev, normalv)
+    info = IntersectionInfo(Intersection(0, Sphere()), pos, eyev, normalv, False, None)
+    result = lighting(light, info)
     assert result == Color(1.9, 1.9, 1.9)
 
 
 def test_lighting_eye_btw_light_and_surface_eye_offset_45():
-    m = Material()
     pos = Point(0, 0, 0)
     eyev = Vector(0, 1/math.sqrt(2), -1/math.sqrt(2))
     normalv = Vector(0, 0, -1)
     light = PointLight(Point(0, 0, -10), Color(1, 1, 1))
-    result = lighting(m, light, pos, eyev, normalv)
+    info = IntersectionInfo(Intersection(0, Sphere()), pos, eyev, normalv, False, None)
+    result = lighting(light, info)
     assert result == Color(1.0, 1.0, 1.0)
 
 def test_lighting_eye_opposite_surface_light_offset_45():
-    m = Material()
     pos = Point(0, 0, 0)
     eyev = Vector(0, 0, -1)
     normalv = Vector(0, 0, -1)
     light = PointLight(Point(0, 10, -10), Color(1, 1, 1))
-    result = lighting(m, light, pos, eyev, normalv)
+    info = IntersectionInfo(Intersection(0, Sphere()), pos, eyev, normalv, False, None)
+    result = lighting(light, info)
     assert result == Color(0.7364, 0.7364, 0.7364)
 
 def test_lighting_eye_in_path_of_reflection_vector():
-    m = Material()
     pos = Point(0, 0, 0)
     eyev = Vector(0, -1/math.sqrt(2), -1/math.sqrt(2))
     normalv = Vector(0, 0, -1)
     light = PointLight(Point(0, 10, -10), Color(1, 1, 1))
-    result = lighting(m, light, pos, eyev, normalv)
+    info = IntersectionInfo(Intersection(0, Sphere()), pos, eyev, normalv, False, None)
+    result = lighting(light, info)
     assert result == Color(1.6364, 1.6364, 1.6364)
 
 def test_lighting_with_light_behind_surface():
-    m = Material()
     pos = Point(0, 0, 0)
     eyev = Vector(0, 0, -1)
     normalv = Vector(0, 0, -1)
     light = PointLight(Point(0, 0, 10), Color(1, 1, 1))
-    result = lighting(m, light, pos, eyev, normalv)
+    info = IntersectionInfo(Intersection(0, Sphere()), pos, eyev, normalv, False, None)
+    result = lighting(light, info)
     assert result == Color(0.1, 0.1, 0.1)
 
 def test_lighting_with_surface_in_shadow():
-    m = Material()
     pos = Point(0, 0, 0)
     eyev = Vector(0, 0, -1)
     normalv = Vector(0, 0, -1)
     light = PointLight(Point(0, 0, -10), Color(1, 1, 1))
     in_shadow = True
-    result = lighting(m, light, pos, eyev, normalv, in_shadow)
+    info = IntersectionInfo(Intersection(0, Sphere()), pos, eyev, normalv, False, None)
+    result = lighting(light, info, in_shadow)
     assert result == Color(0.1, 0.1, 0.1)
 
 def test_lighting_with_a_pattern():
@@ -73,9 +73,14 @@ def test_lighting_with_a_pattern():
     eyev = Vector(0, 0, -1)
     normalv = Vector(0, 0, -1)
     light = PointLight(Point(0, 0, -10), Color(1, 1, 1))
+    s = Sphere()
+    s.material = m
+    info = IntersectionInfo(Intersection(0.0, s), None, eyev, normalv, False, None)
 
-    c1 = lighting(m, light, Point(0.9, 0, 0), eyev, normalv, False)
-    c2 = lighting(m, light, Point(1.1, 0, 0), eyev, normalv, False)
+    info.point = Point(0.9, 0, 0)
+    c1 = lighting(light, info)
+    info.point = Point(1.1, 0, 0)
+    c2 = lighting(light, info)
 
     assert c1 == Colors.white
     assert c2 == Colors.black

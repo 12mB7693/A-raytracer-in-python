@@ -9,12 +9,12 @@ from .transformations import (
     scaling,
     view_transform,
 )
-from .shapes import Sphere, Plane, hit
+from .shapes import Sphere, Plane, IntersectionInfo, hit
 from .ray import Ray
 from .lights import PointLight
 from .materials import Material, StripePattern, lighting
 from .world import World
-from .raytracer.camera import Camera
+from .camera import Camera
 import math
 
 
@@ -120,7 +120,12 @@ def simple_raytracer_chapter_six() -> Canvas:
                 point = r.position(hit_result.t)
                 normal = hit_result.shape.normal_at(point)
                 eye = -r.direction
-                color = lighting(hit_result.shape.material, light, point, eye, normal)
+                info = IntersectionInfo()
+                info.point = point
+                info.eyev = eye
+                info.normalv = normal
+                info.shape = hit_result.shape
+                color = lighting(light, info)
                 canvas.write_pixel(x, y, color)
 
     return canvas
@@ -227,6 +232,7 @@ def simple_scene_with_planes_chapter_nine():
 
 
 def scence_with_patterns_chapter_ten():
+    """
     wall = Plane()
     wall.set_transform(translation(0, 0, 2).multiply(rotation_x(math.pi / 2)))
     wall.material = Material(
@@ -239,6 +245,7 @@ def scence_with_patterns_chapter_ten():
     floor.material = Material(
         pattern=StripePattern(Colors.red, Colors.white), specular=0
     )
+    """
 
     middle = Sphere()
     middle.set_transform(translation(-0.5, 1, 0.5))
@@ -252,14 +259,17 @@ def scence_with_patterns_chapter_ten():
     right.set_transform(translation(1.5, 0.5, -0.5).multiply(scaling(0.5, 0.5, 0.5)))
     right.material = Material(pattern=StripePattern(Colors.red, Colors.white), diffuse=0.7, specular=0.3)
 
+    """
     left = Sphere()
     left.set_transform(
         translation(-1.5, 0.33, -0.75).multiply(scaling(0.33, 0.33, 0.33))
     )
     left.material = Material(color=Color(1, 0.8, 0.1), diffuse=0.7, specular=0.3)
+    """
 
     world = World()
-    world.objects = [floor, wall, right, middle, left]
+    #world.objects = [floor, wall, right, middle, left]
+    world.objects = [right, middle]
     world.lightSource = PointLight(Point(-10, 10, -10), Color(1, 1, 1))
 
     camera = Camera(100, 50, math.pi / 3)

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from dataclasses import dataclass
 from .ray import Ray
 from .tuples import Point, Vector, ABS_TOL
 from .matrix import create_identity_matrix, Matrix
@@ -29,8 +30,6 @@ class Shape(metaclass=abc.ABCMeta):
         world_normal = self.transform.inverse().transpose().multiply(object_normal)
         return world_normal.normalize()
 
-    def lighting(self, light: PointLight):
-        pass
 
     @abc.abstractmethod
     def shape_specific_intersect(self, ray: Ray) -> list[Intersection]:
@@ -46,27 +45,26 @@ class Intersection:
         self.t = t
         self.shape = shape
 
-
-class IntersectionInfo(Intersection):
-    def __init__(self, intersection: Intersection):
-        super().__init__(intersection.t, intersection.shape)
-        self.point = None
-        self.eyev = None
-        self.normalv = None
-        self.inside = False
-        self.over_point = None
-
+@dataclass
+class IntersectionInfo:
+    intersection: Intersection = None
+    point: Point = None
+    eyev: Vector = None
+    normalv: Vector = None
+    inside: bool = False
+    over_point: Point = None
 
 def prepare_computations(intersection: Intersection, ray: Ray) -> IntersectionInfo:
-    comps = IntersectionInfo(intersection)
-    comps.eyev = -ray.direction
-    comps.point = ray.position(comps.t)
-    comps.normalv = comps.shape.normal_at(comps.point)
-    if comps.normalv.dot(comps.eyev) < 0:
-        comps.inside = True
-        comps.normalv = -comps.normalv
-    comps.over_point = comps.point + comps.normalv * ABS_TOL
-    return comps
+    eyev = -ray.direction
+    point = ray.position(intersection.t)
+    normalv = intersection.shape.normal_at(point)
+    inside = False
+    if normalv.dot(eyev) < 0:
+        inside = True
+        normalv = -normalv
+    over_point = point + normalv * ABS_TOL
+    info = IntersectionInfo(intersection, point, eyev, normalv, inside, over_point)
+    return info
 
 
 def hit(intersections: list[Intersection]):
