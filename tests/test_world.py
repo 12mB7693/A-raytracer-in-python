@@ -8,7 +8,7 @@ def test_empty_world():
 def test_default_world():
     w = World.default()
     s1 = Sphere()
-    s1.material = Material(color=Color(0.8, 1, 0.6), diffuse=0.7, specular=0.2)
+    s1.material = Material(pattern=ConstantPattern(Color(0.8, 1, 0.6)), diffuse=0.7, specular=0.2)
     s2 = Sphere()
     s2.set_transform(scaling(0.5, 0.5, 0.5))
     light = PointLight(Point(-10, 10, -10), Color(1, 1, 1))
@@ -65,7 +65,7 @@ def test_color_when_intersection_behind_ray():
     inner.material.ambient = 1
     r = Ray(Point(0, 0, 0.75), Vector(0, 0 ,-1))
     c = w.color_at(r)
-    assert c == inner.material.color
+    assert c == inner.material.pattern.color
 
 def test_no_shadow_when_point_and_light_not_collinear():
     w = World.default()

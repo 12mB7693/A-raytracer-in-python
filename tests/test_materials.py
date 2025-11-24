@@ -1,4 +1,4 @@
-from src.raytracer import Material, Color, Colors, StripePattern
+from src.raytracer import Material, Color, Colors, StripePattern, ConstantPattern
 from src.raytracer import Point, Vector, PointLight, lighting
 from src.raytracer import Sphere, Intersection, IntersectionInfo, scaling, translation
 
@@ -6,7 +6,8 @@ import math
 
 def test_material_constructor():
     m = Material()
-    assert m.color == Color(1, 1, 1)
+    assert isinstance(m.pattern, ConstantPattern)
+    assert m.pattern.color == Color(1, 1, 1)
     assert m.ambient == 0.1
     assert m.diffuse == 0.9
     assert m.specular == 0.9
@@ -92,37 +93,37 @@ def test_stripe_pattern():
 
 def test_stripe_pattern_constant_in_y():
     pattern = StripePattern(Colors.white, Colors.black)
-    assert pattern.stripe_at(Point(0, 0, 0)) == Colors.white
-    assert pattern.stripe_at(Point(0, 1, 0)) == Colors.white
-    assert pattern.stripe_at(Point(0, 2, 0)) == Colors.white
+    assert pattern.pattern_at(Point(0, 0, 0)) == Colors.white
+    assert pattern.pattern_at(Point(0, 1, 0)) == Colors.white
+    assert pattern.pattern_at(Point(0, 2, 0)) == Colors.white
 
 def test_stripe_pattern_constant_in_z():
     pattern = StripePattern(Colors.white, Colors.black)
-    assert pattern.stripe_at(Point(0, 0, 0)) == Colors.white
-    assert pattern.stripe_at(Point(0, 0, 1)) == Colors.white
-    assert pattern.stripe_at(Point(0, 0, 2)) == Colors.white
+    assert pattern.pattern_at(Point(0, 0, 0)) == Colors.white
+    assert pattern.pattern_at(Point(0, 0, 1)) == Colors.white
+    assert pattern.pattern_at(Point(0, 0, 2)) == Colors.white
 
 def test_stripe_pattern_alternates_in_x():
     pattern = StripePattern(Colors.white, Colors.black)
-    assert pattern.stripe_at(Point(0, 0, 0)) == Colors.white
-    assert pattern.stripe_at(Point(0.9, 0, 0)) == Colors.white
-    assert pattern.stripe_at(Point(1, 0, 0)) == Colors.black
-    assert pattern.stripe_at(Point(-0.1, 0, 0)) == Colors.black
-    assert pattern.stripe_at(Point(-1, 0, 0)) == Colors.black
-    assert pattern.stripe_at(Point(-1.1, 0, 0)) == Colors.white
+    assert pattern.pattern_at(Point(0, 0, 0)) == Colors.white
+    assert pattern.pattern_at(Point(0.9, 0, 0)) == Colors.white
+    assert pattern.pattern_at(Point(1, 0, 0)) == Colors.black
+    assert pattern.pattern_at(Point(-0.1, 0, 0)) == Colors.black
+    assert pattern.pattern_at(Point(-1, 0, 0)) == Colors.black
+    assert pattern.pattern_at(Point(-1.1, 0, 0)) == Colors.white
 
 def test_stripes_with_object_transformation():
     s = Sphere()
     s.set_transform(scaling(2, 2, 2))
     pattern = StripePattern(Colors.white, Colors.black)
-    c = pattern.stripe_at_object(s, Point(1.5, 0, 0))
+    c = pattern.pattern_at_shape(s, Point(1.5, 0, 0))
     assert c == Colors.white
 
 def test_stripes_with_pattern_transformation():
     s = Sphere()
     pattern = StripePattern(Colors.white, Colors.black)
     pattern.transform = scaling(2, 2, 2)
-    c = pattern.stripe_at_object(s, Point(1.5, 0, 0))
+    c = pattern.pattern_at_shape(s, Point(1.5, 0, 0))
     assert c == Colors.white
 
 def test_stripes_with_both_object_and_pattern_transformation():
@@ -130,5 +131,5 @@ def test_stripes_with_both_object_and_pattern_transformation():
     s.set_transform(scaling(2, 2, 2))
     pattern = StripePattern(Colors.white, Colors.black)
     pattern.transform = translation(0.5, 0, 0)
-    c = pattern.stripe_at_object(s, Point(2.5, 0, 0))
+    c = pattern.pattern_at_shape(s, Point(2.5, 0, 0))
     assert c == Colors.white

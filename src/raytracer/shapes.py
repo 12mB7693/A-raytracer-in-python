@@ -39,11 +39,10 @@ class Shape(metaclass=abc.ABCMeta):
     def shape_specific_normal_at(self, object_point: Point) -> Vector:
         pass
 
-
+@dataclass
 class Intersection:
-    def __init__(self, t, shape: Shape) -> None:
-        self.t = t
-        self.shape = shape
+    t: float = 0.0
+    shape: Shape = None
 
 @dataclass
 class IntersectionInfo:
@@ -77,6 +76,18 @@ def hit(intersections: list[Intersection]):
 
 
 class Sphere(Shape):
+    def __init__(self):
+        super().__init__()
+
+    def texture_transform(self, point: Point) -> tuple[float, float]:
+        """ point: on unit sphere """
+        theta = math.acos(point.z)
+        phi = math.atan2(point.y, point.x)
+        u = phi/(2*math.pi)
+        v = (math.pi - theta)/math.pi
+        return (u, v)
+
+
     def shape_specific_normal_at(self, object_point: Point) -> Vector:
         object_normal = Vector(object_point.x, object_point.y, object_point.z)
         return object_normal

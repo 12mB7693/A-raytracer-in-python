@@ -1,5 +1,5 @@
 from .shapes import Sphere, Intersection, IntersectionInfo, prepare_computations, hit
-from .materials import Material, lighting
+from .materials import Material, ConstantPattern, lighting
 from .tuples import Color, Point
 from .transformations import scaling
 from .ray import Ray
@@ -15,7 +15,7 @@ class World:
     def default(cls):
         w = cls()
         s1 = Sphere()
-        s1.material = Material(color=Color(0.8, 1, 0.6), diffuse=0.7, specular=0.2)
+        s1.material = Material(pattern=ConstantPattern(Color(0.8, 1, 0.6)), diffuse=0.7, specular=0.2)
         w.objects.append(s1)
         s2 = Sphere()
         s2.set_transform(scaling(0.5, 0.5, 0.5))
