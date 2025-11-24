@@ -12,7 +12,7 @@ from .transformations import (
 from .shapes import Sphere, Plane, IntersectionInfo, hit
 from .ray import Ray
 from .lights import PointLight
-from .materials import Material, StripePattern, lighting
+from .materials import Material, StripePattern, ConstantPattern, Texture, TexturePath, lighting
 from .world import World
 from .camera import Camera
 import math
@@ -279,6 +279,34 @@ def scence_with_patterns_chapter_ten():
     canvas = camera.render(world)
     return canvas
 
+def simple_scene_of_a_sphere():
+    middle = Sphere()
+    #pattern = Texture()
+    #pattern.transform = scaling(0.5, 1, 1.5)
+    pattern = Texture(TexturePath.earthTexture)
+    middle.set_transform(translation(0, 0.5, 0))
+    #middle.set_transform((translation(0, 1.5, 0.5).multiply(scaling(2, 2, 2).multiply(rotation_y(math.pi/2).multiply(rotation_z(math.pi/4))))))
+    middle.material = Material(
+        pattern=pattern, diffuse=0.7, specular=0.3
+    )
+
+    floor = Plane()
+    floor.transform = translation(0, -4, 10)
+    # floor.material = Material(color = Color(1, 0.9, 0.9), specular=0)
+    floor.material = Material(
+        pattern=ConstantPattern(Colors.white), specular=0
+    )
+
+    world = World()
+    world.objects = [floor, middle]
+    world.lightSource = PointLight(Point(-10, 10, -10), Color(1, 1, 1))
+
+    camera = Camera(200, 200, math.pi / 3)
+    camera.transform = view_transform(
+        Point(0, 1.5, -5), Point(0, 1, 0), Vector(0, 1, 0)
+    )
+    canvas = camera.render(world)
+    return canvas
 
 def main():
     # canvas = draw_trajectory_of_projectile_chapter_two()
@@ -287,7 +315,8 @@ def main():
     # canvas = simple_raytracer_chapter_six()
     # canvas = simple_scene_chapter_seven()
     # canvas = simple_scene_with_planes_chapter_nine()
-    canvas = scence_with_patterns_chapter_ten()
+    #canvas = scence_with_patterns_chapter_ten()
+    canvas = simple_scene_of_a_sphere()
 
     ppm = canvas.convert_to_ppm()
 

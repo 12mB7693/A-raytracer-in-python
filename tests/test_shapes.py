@@ -127,3 +127,8 @@ def test_intersect_plane_from_below():
     assert len(xs) == 1
     assert xs[0].t == 1
     assert xs[0].shape == p
+
+def test_texture_transform():
+    s = Sphere()
+    assert s.texture_transform(Point(0, 0, 1)) == (0.75, 0.5)
+    assert s.texture_transform(Point(0, 0, -1)) == (0.25, 0.5)

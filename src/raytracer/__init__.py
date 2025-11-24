@@ -6,6 +6,6 @@ from .ray import Ray
 from .shapes import Sphere, Plane, Intersection, IntersectionInfo, hit, prepare_computations
 from .transformations import *
 from .lights import *
-from .materials import Material, lighting, StripePattern, ConstantPattern
+from .materials import Material, lighting, StripePattern, ConstantPattern, TexturePath, Texture
 from .world import World
 from .camera import Camera

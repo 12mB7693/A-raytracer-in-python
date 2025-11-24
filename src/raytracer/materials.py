@@ -31,6 +31,8 @@ class Pattern(metaclass=abc.ABCMeta):
 
 class TexturePath:
     earthTexture = "src/raytracer/textures/world_texture.png"
+    horizontalStripes = "src/raytracer/textures/horizontal_stripes.jpg"
+    vertical = "src/raytracer/textures/vertical.jpg"
 
 class Texture(Pattern):
     def __init__(self, pathToTexture: TexturePath) -> None:
@@ -38,9 +40,17 @@ class Texture(Pattern):
         self.texture = np.asarray(image)
         self.u_max, self.v_max,_ = self.texture.shape
 
-    def texture_at_shape(self, shape: shapes.Shape, world_point: Point) -> Color:
+    def pattern_at_shape(self, shape: shapes.Shape, world_point: Point) -> Color:
         object_point = shape.transform.inverse().multiply(world_point)
-        u, v = shape.texture_transform(object_point)
+        #if abs(object_point.magnitude() - 1) < 0.001:
+        #    return Color(1, 1, 0)
+        #if 1 - object_point.z < 0.2:
+        #    return Colors.red
+        #if 1 - object_point.y < 0.2:
+        #    return Colors.blue
+        #if 1 - object_point.x < 0.2:
+        #    return Colors.green
+        v, u = shape.texture_transform(object_point)
         index_u = math.floor(self.u_max * u)
         index_v = math.floor(self.v_max * v)
         color = self.texture[index_u, index_v]

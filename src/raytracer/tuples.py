@@ -118,7 +118,6 @@ class Color:
             raise Exception(
                 "The value is not a scalar, but a color. Did you mean to use hadamard_product?"
             )
-            # return Color(self.red * value.red, self.green * value.green, self.blue * value.blue)
         else:
             raise Exception
 
@@ -144,6 +143,7 @@ class Colors:
 class Vector(Tuple):
     def __init__(self, x: float, y: float, z: float) -> None:
         super().__init__(x, y, z, 0)
+
 
     # def create(x, y, z, w):
     #    return Vector(x, y, z)

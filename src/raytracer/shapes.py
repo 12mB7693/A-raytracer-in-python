@@ -80,11 +80,15 @@ class Sphere(Shape):
         super().__init__()
 
     def texture_transform(self, point: Point) -> tuple[float, float]:
-        """ point: on unit sphere """
-        theta = math.acos(point.z)
-        phi = math.atan2(point.y, point.x)
-        u = phi/(2*math.pi)
-        v = (math.pi - theta)/math.pi
+        """
+
+        point: on unit sphere
+
+        """
+        theta = math.acos(point.y)
+        phi = math.atan2(point.z, point.x)
+        u = (phi + math.pi)/(2*math.pi)
+        v = theta/math.pi
         return (u, v)
 
 
