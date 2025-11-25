@@ -1,7 +1,9 @@
 # RayTracer
 
 ![Python](https://img.shields.io/badge/python-3.12+-blue)
-![uv](https://img.shields.io/badge/uv-package%20manager-brown)
+![uv](https://img.shields.io/badge/uv-brown)
+![Tests](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml/badge.svg)
+
 ![coverage](coverage.svg)
 
 ## Overview
