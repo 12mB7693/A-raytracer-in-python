@@ -26,7 +26,6 @@ def test_translation_does_not_transform_vectors():
 def test_scaling_point():
     transform = scaling(2, 3, 4)
     p = Point(-4, 6, 8)
-    print(transform.values)
     print(transform.multiply_tuple(p).x)
     assert transform.multiply_tuple(p) == Point(-8, 18, 32)
 

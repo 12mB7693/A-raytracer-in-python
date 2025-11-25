@@ -16,6 +16,30 @@ from .materials import Material, StripePattern, ConstantPattern, Texture, Textur
 from .world import World
 from .camera import Camera
 import math
+import cProfile
+import io
+import pstats
+from functools import wraps
+from pathlib import Path
+
+FILE_PATH = Path(__file__).parent.joinpath("profiling_stats.prof")
+
+
+def profile(fn):
+	@wraps(fn)
+	def profiler(*args, **kwargs):
+		profiler = cProfile.Profile()
+		profiler.enable()
+		fn_result = fn(*args, **kwargs)
+		profiler.disable()
+		stream = io.StringIO()
+		stats = pstats.Stats(profiler, stream=stream)
+		stats.sort_stats(pstats.SortKey.TIME)
+		stats.print_stats()
+		print(stream.getvalue())
+		stats.dump_stats(filename=FILE_PATH)
+		return fn_result
+	return profiler
 
 
 class Projectile:
@@ -279,6 +303,8 @@ def scence_with_patterns_chapter_ten():
     canvas = camera.render(world)
     return canvas
 
+
+@profile
 def simple_scene_of_a_sphere():
     middle = Sphere()
     #pattern = Texture()
@@ -301,7 +327,7 @@ def simple_scene_of_a_sphere():
     world.objects = [floor, middle]
     world.lightSource = PointLight(Point(-10, 10, -10), Color(1, 1, 1))
 
-    camera = Camera(200, 200, math.pi / 3)
+    camera = Camera(700, 700, math.pi / 3)
     camera.transform = view_transform(
         Point(0, 1.5, -5), Point(0, 1, 0), Vector(0, 1, 0)
     )

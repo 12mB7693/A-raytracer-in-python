@@ -4,6 +4,19 @@
 ![uv](https://img.shields.io/badge/uv-package%20manager-brown)
 ![coverage](coverage.svg)
 
+## Overview
+This repository contains the implementation of a raytracer written in Python mainly based on the book _The ray tracer challenge: a test-driven guide to your first 3D renderer_ [^1].
+So far, the implementation supports rendering spheres and planes with custom colors, patterns, and textures. The image below was rendered using a 2D projection of the earth [^2] as a texture.
+
+![Rendering of the earth](imgs/earth_rendering.png)
+
+
+<!--
+## Implementation details
+To improve performance, the custom matrix and vector arithmetic implementations have been replaced with NumPy’s built-in functions.
+-->
+
+## For developers
 
 Install the Python package manager [uv](https://docs.astral.sh/uv/getting-started/installation/).
 
@@ -28,11 +41,16 @@ In the top folder run
 uv run python -m src.raytracer.main
 ```
 
-## For developers
+
 
 Run tests via
 ```
 uv run python -m pytest
+```
+
+or run single tests with
+```
+uv run python -m pytest tests/test_module_name.py::test_name
 ```
 
 Check for errors and warnings via
@@ -48,8 +66,8 @@ uv run coverage-badge -o coverage.svg
 
 ## Credits / References
 
-Buck, Jamis. "The ray tracer challenge: a test-driven guide to your first 3D renderer." (2019): 1-250.
+[^1]: Buck, Jamis. "The ray tracer challenge: a test-driven guide to your first 3D renderer." (2019): 1-250.
 
-Shirley, Peter, Michael Ashikhmin, and Steve Marschner. Fundamentals of computer graphics. AK Peters/CRC Press, 2009.
+<!-- Shirley, Peter, Michael Ashikhmin, and Steve Marschner. Fundamentals of computer graphics. AK Peters/CRC Press, 2009. -->
 
-Earth Texture Image: “The Blue Marble: Land Surface, Ocean Color and Sea Ice,” NASA (MODIS / Terra satellite). Available at: https://visibleearth.nasa.gov/images/57730/the-blue-marble-land-surface-ocean-color-and-sea-ice
+[^2]: Earth Texture Image: “The Blue Marble: Land Surface, Ocean Color and Sea Ice,” NASA (MODIS / Terra satellite). Available at: https://visibleearth.nasa.gov/images/57730/the-blue-marble-land-surface-ocean-color-and-sea-ice

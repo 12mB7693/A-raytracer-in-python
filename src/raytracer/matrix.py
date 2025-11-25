@@ -1,20 +1,108 @@
 from __future__ import annotations
 import math
+import numpy as np
 from .tuples import Tuple
 from .ray import Ray
 
+class Matrix:
+    def __init__(self, values: list[float] | None = None, dimension: int = 4) -> None:
+        self.dimension = dimension
+        if values is None:
+            self.matrix = np.zeros((dimension, dimension), np.float64)
+        elif len(values) == dimension * dimension:
+            values = np.array(values, np.float64)
+            self.matrix = values.reshape((dimension, dimension))
+        else:
+            raise ValueError("Mismatch between length of values and dimension")
 
+    def get_value_at(self, row: int, column: int) -> float:
+        return self.matrix[row][column]
+
+    def set_value_at(self, row: int, column: int, value: float) -> None:
+        self.matrix[row][column] = value
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Matrix):
+            return (
+                self.dimension == other.dimension and (self.matrix==other.matrix).all()
+            )
+        else:
+            return False
+
+    def approximately_equals(self, other: object, tolerance=0.01) -> bool:
+        if isinstance(other, Matrix):
+            return (
+                self.dimension == other.dimension and
+                all(
+                    [
+                        math.isclose(self.matrix[i][j], other.matrix[i][j], abs_tol=tolerance)
+                        for i in range(self.dimension) for j in range(self.dimension)
+                    ]
+                )
+            )
+        else:
+            return False
+
+    def multiply(self, other: Matrix | Tuple | Ray) -> Matrix | Tuple | Ray:
+        if isinstance(other, Tuple):
+            return self.multiply_tuple(other)
+        elif isinstance(other, Matrix):
+            return self.multiply_matrix(other)
+        elif isinstance(other, Ray):
+            return self._multiply_ray(other)
+
+    def _multiply_ray(self, other: Ray):
+        transformed_origin = self.multiply_tuple(other.origin)
+        transformed_direction = self.multiply_tuple(other.direction)
+        return Ray(transformed_origin, transformed_direction)
+
+    def multiply_matrix(self, other: Matrix) -> Matrix:
+        result = Matrix()
+        result.matrix = self.matrix @ other.matrix
+        return result
+
+    def multiply_tuple(self, other: Tuple) -> Tuple:
+        tuple = np.array([other.x, other.y, other.z, other.w])
+        result = self.matrix @ tuple
+        return Tuple(result[0], result[1], result[2], result[3])
+
+    def transpose(self) -> Matrix:
+        result = Matrix()
+        result.matrix = self.matrix.transpose()
+        return result
+
+    def determinant(self) -> float:
+        return float(np.linalg.det(self.matrix))
+
+    def is_invertible(self) -> bool:
+        return not math.isclose(0.0, self.determinant())
+
+    def inverse(self) -> Matrix | None:
+        if not self.is_invertible():
+            return None
+        result = Matrix()
+        result.matrix = np.linalg.inv(self.matrix)
+        return result
+
+def create_identity_matrix():
+    identity_matrix = Matrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+    return identity_matrix
+
+"""
 class Matrix:
     def __init__(self, values: list[float] | None = None, dimension: int = 4) -> None:
         self.dimension = dimension
         self.size = 4
         if values is None:
-            self.values = [0.0 for i in range(self.size * self.size)]
+            self.values = np.zeros(self.size* self.size, np.float64) #[0.0 for i in range(self.size * self.size)] #np.zeros(self.size* self.size) #
+            self.matrix = np.zeros((self.size, self.size), np.float64)
         else:
             if len(values) == self.size * self.size:
-                self.values = values
+                self.values = np.array(values, np.float64) # values
+                self.matrix = np.zeros((self.size, self.size), np.float64)
             elif len(values) == self.dimension * self.dimension:
-                self.values = [0.0 for i in range(self.size * self.size)]
+                self.values = np.zeros(self.size*self.size, np.float64) # [0.0 for i in range(self.size * self.size)] #
+                self.matrix = np.array((dimension, dimension), np.float64)
                 for row in range(self.dimension):
                     for column in range(self.dimension):
                         self.values[row * self.size + column] = values[
@@ -49,10 +137,10 @@ class Matrix:
         else:
             return False
 
-    def get_value_at(self, row: int, column: int) -> float:
+    def get_value_at(self, row: int, column: int) -> float: #nur hier und test
         return self.values[row * self.size + column]
 
-    def set_value_at(self, row: int, column: int, value: float) -> None:
+    def set_value_at(self, row: int, column: int, value: float) -> None: #auch in transformations
         self.values[row * self.size + column] = value
 
     def _get_row(self, row_index: int) -> Tuple:
@@ -111,6 +199,8 @@ class Matrix:
         return matrix
 
     def determinant(self) -> float:
+        #matrix = self.values.reshape((self.size, self.size))
+        return float(np.linalg.det(self.matrix))
         det = 0.0
         if self.dimension == 2:
             det = self.get_value_at(0, 0) * self.get_value_at(1, 1) - self.get_value_at(
@@ -151,6 +241,11 @@ class Matrix:
     def inverse(self) -> Matrix | None:
         if not self.is_invertible():
             return None
+        #matrix = self.values.reshape((self.size,self.size))
+        inv_values = np.linalg.inv(self.matrix)
+        inv_values.flatten()
+        inverse = Matrix(dimension=self.dimension, values=inv_values)
+        return inverse
         inverse = Matrix(dimension=self.dimension)
         for row in range(self.dimension):
             for col in range(self.dimension):
@@ -163,3 +258,6 @@ class Matrix:
 def create_identity_matrix():
     identity_matrix = Matrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
     return identity_matrix
+
+
+"""
