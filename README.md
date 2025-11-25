@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/python-3.12+-blue)
 ![uv](https://img.shields.io/badge/uv-brown)
 [![Tests](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml/badge.svg)](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml)
-<!-- COVERAGE BADGE -->
+[![Tests & Coverage](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml/badge.svg)](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml)
 
 ## Overview
 This repository contains the implementation of a raytracer written in Python mainly based on the book _The ray tracer challenge: a test-driven guide to your first 3D renderer_ [^1].
