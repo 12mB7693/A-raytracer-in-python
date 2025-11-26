@@ -4,7 +4,7 @@ import abc
 import math
 from dataclasses import dataclass
 
-from .materials import Material
+from . import materials as mat
 from .matrix import Matrix, create_identity_matrix
 from .ray import Ray
 from .tuples import ABS_TOL, Point, Vector
@@ -13,7 +13,7 @@ from .tuples import ABS_TOL, Point, Vector
 class Shape(metaclass=abc.ABCMeta):
     def __init__(self):
         self.transform = create_identity_matrix()
-        self.material = Material()
+        self.material = mat.Material()
 
     def set_transform(self, transform: Matrix) -> None:
         self.transform = transform
