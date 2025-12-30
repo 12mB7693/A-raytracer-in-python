@@ -6,3 +6,20 @@ tests/__pycache__/
 .github/*
 *.egg-info/
 *.pyc
+
+*.prof
+*.plantuml
+*.pdf
+*.png
+*.html
+.coverage
+
+
+# prevent commit of temporary development files
+docker-build/*
+imgs-copy/*
+requirements.txt
+requirements-dev.txt
+coverage.txt
+docker-files.txt
+output.ppm

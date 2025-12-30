@@ -1,4 +1,5 @@
 import math
+from PIL import Image
 
 from .canvas import Canvas
 from .matrix import create_identity_matrix
@@ -46,6 +47,19 @@ class Camera:
         for y in range(self.vsize):
             for x in range(self.hsize):
                 ray = self.ray_for_pixel(x, y)
+                color = world.color_at(ray)
+                canvas.write_pixel(x, y, color)
+
+        return canvas
+
+    def render_tile(self, world: World, x0, x1, y0, y1, width, height) -> Canvas:
+        tile_width = x1 - x0
+        tile_height = y1 - y0
+        canvas = Canvas(tile_width, tile_height)
+
+        for y in range(tile_height):
+            for x in range(tile_width):
+                ray = self.ray_for_pixel(x0 + x, y0 + y)
                 color = world.color_at(ray)
                 canvas.write_pixel(x, y, color)
 

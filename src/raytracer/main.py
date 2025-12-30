@@ -4,6 +4,7 @@ import math
 import pstats
 from functools import wraps
 from pathlib import Path
+from PIL import Image
 
 from .camera import Camera
 from .canvas import Canvas
@@ -319,13 +320,14 @@ def simple_scene_of_a_sphere():
     world.objects = [floor, middle]
     world.lightSource = PointLight(Point(-10, 10, -10), Color(1, 1, 1))
 
-    camera = Camera(700, 700, math.pi / 3)
+    width = 200 # replace by larger number (eg 700) to render an image with better resolution
+    height = 200
+    camera = Camera(width, height, math.pi / 3)
     camera.transform = view_transform(
         Point(0, 1.5, -5), Point(0, 1, 0), Vector(0, 1, 0)
     )
-    canvas = camera.render(world)
+    canvas = camera.render_tile(world, 0, width, 0, height, width, height)
     return canvas
-
 
 def main():
     # canvas = draw_trajectory_of_projectile_chapter_two()
@@ -337,9 +339,10 @@ def main():
     # canvas = scence_with_patterns_chapter_ten()
     canvas = simple_scene_of_a_sphere()
 
+    #canvas.save("output.ppm", format="PPM")
     ppm = canvas.convert_to_ppm()
 
-    with open("output.ppm", "w") as text_file:
+    with open("imgs/output.ppm", "w") as text_file:
         text_file.write(ppm)
 
 
