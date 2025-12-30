@@ -2,8 +2,8 @@
 
 ![Python](https://img.shields.io/badge/python-3.12+-blue)
 ![uv](https://img.shields.io/badge/uv-brown)
-[![Tests](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml/badge.svg)](https://github.com/12mB7693/Python-RayTracer/actions/workflows/tests.yml)
-[![code coverage](https://codecov.io/gh/12mB7693/Python-RayTracer/branch/main/graph/badge.svg)](https://codecov.io/gh/12mB7693/Python-RayTracer)
+[![Tests](https://github.com/12mB7693/A-raytracer-in-python/actions/workflows/tests.yml/badge.svg)](https://github.com/12mB7693/A-raytracer-in-python/actions/workflows/tests.yml)
+[![code coverage](https://codecov.io/gh/12mB7693/A-raytracer-in-python/branch/main/graph/badge.svg)](https://codecov.io/gh/12mB7693/A-raytracer-in-python)
 
 
 ## Overview
