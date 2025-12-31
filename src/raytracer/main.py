@@ -5,6 +5,7 @@ import pstats
 from functools import wraps
 from pathlib import Path
 from PIL import Image
+import os
 
 from .camera import Camera
 from .canvas import Canvas
@@ -342,6 +343,7 @@ def main():
     #canvas.save("output.ppm", format="PPM")
     ppm = canvas.convert_to_ppm()
 
+    os.makedirs("imgs", exist_ok=True)
     with open("imgs/output.ppm", "w") as text_file:
         text_file.write(ppm)
 

@@ -8,20 +8,51 @@
 
 ## Overview
 
-This repository contains the implementation of a raytracer written in Python mainly based on the book _The ray tracer challenge: a test-driven guide to your first 3D renderer_ [^1].
-So far, the implementation supports rendering spheres and planes with custom colors, patterns, and textures. The image below was rendered using a 2D projection of the earth [^2] as a texture.
+This repository contains the implementation of a raytracer written in Python based on the book _The ray tracer challenge: a test-driven guide to your first 3D renderer_ [^1].
+The implementation supports rendering spheres and planes with custom colors, patterns, and textures. The image below was rendered using a 2D projection of the earth [^2] as a texture.
+
+
 
 ![Rendering of the earth](imgs/earth_rendering.png)
 
 
 <!--
-## Implementation details
+## Technical details
 To improve performance, the custom matrix and vector arithmetic implementations have been replaced with NumPy’s built-in functions.
 -->
 
+## For users
+
+### With Docker
+
+Clone the repository and change into the project root (where the `Dockerfile` is located). Build the Docker image with:
+```bash
+docker build -t python-raytracer .
+```
+To render the output image, run the Docker container:
+```bash
+docker run -v "$(pwd)/imgs:/app/imgs" --rm python-raytracer
+```
+On Linux, you may need to run the commands with root privileges:
+```bash
+sudo docker build -t python-raytracer .
+sudo docker run -v "$(pwd)/imgs:/app/imgs" --rm python-raytracer
+```
+After the container finishes, you can find the rendered image `output.ppm` in the local `imgs` folder of this repository.
+
+### Manual installation
+
+Install the Python package manager [uv](https://docs.astral.sh/uv/getting-started/installation/). Clone the repository and change into the project root.
+
+To render the output image, run:
+```python
+uv run python -m src.raytracer.main
+```
+After the computation finishes, you can find the rendered image `output.ppm` in the local `imgs` folder of this repository.
+
 ## For developers
 
-Install the Python package manager [uv](https://docs.astral.sh/uv/getting-started/installation/).
+Install the Python package manager [uv](https://docs.astral.sh/uv/getting-started/installation/). 
 
 <!-- 
 
@@ -36,34 +67,24 @@ run uv sync regularly
 
 -->
 
-Run the raytracer: 
-
-In the top folder run
-
-```python
-uv run python -m src.raytracer.main
-```
-
-
-
 Run tests via
-```
+```bash
 uv run python -m pytest
 ```
 
 or run single tests with
-```
+```bash
 uv run python -m pytest tests/test_module_name.py::test_name
 ```
 
 Check for errors and warnings via
-```
+```bash
 uv run mypy -m src.raytracer.file_name
 ```
 
 Compute Code Coverage locally
 <!-- uv add --dev coverage-badge -->
-```
+```bash
 uv run coverage-badge -o coverage.svg
 ```
 

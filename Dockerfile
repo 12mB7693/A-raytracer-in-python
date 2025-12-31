@@ -9,3 +9,11 @@ WORKDIR /app
 
 # only for tests locally
 # COPY docker-build/. .
+
+COPY pyproject.toml uv.lock .
+COPY src/. src/.
+
+RUN uv sync --no-dev
+ENV PATH="/app/.venv/bin:$PATH"
+
+CMD ["python", "-m", "src.raytracer.main"]
